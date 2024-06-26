@@ -1,4 +1,4 @@
-import { GoogleAuthProvider, getAuth, signInWithPopup, signOut } from "firebase/auth";
+import { GithubAuthProvider, GoogleAuthProvider, getAuth, signInWithPopup, signOut } from "firebase/auth";
 import { Link } from "react-router-dom";
 import app from "../../firebase/firebase.init";
 import { FcGoogle } from "react-icons/fc";
@@ -14,8 +14,9 @@ const Register = () => {
 
     const auth = getAuth(app);
     const googleProvider = new GoogleAuthProvider();
+    const githubProvider = new GithubAuthProvider();
 
-
+    // SignIn With Google Popup
     const handleGoogleSignInPopup = () => {
         signInWithPopup(auth, googleProvider)
             .then(result => {
@@ -27,8 +28,20 @@ const Register = () => {
                 setErrorInfo(error)
             })
     }
+    // SignIn With GitHub Popup
+    const handleGitHubSignInPopup = () => {
+        signInWithPopup(auth, githubProvider)
+        .then(result => {
+            setUserInfo(result.user)
+            console.log(result.user);
+        })
+        .catch(error => {
+            console.log(error.message);
+        })
+    }
 
-    const handleLogoutButton = () => {
+    // SignOut Integration
+    const handleSignOutButton = () => {
         signOut(auth)
         .then(result => {
             setUserInfo('')
@@ -78,10 +91,10 @@ const Register = () => {
             <div className="text-center">
                 <h1 className="text-xl font-bold">Or Sign In With</h1>
                 <div className="mt-3">
-                    {userInfo ? <button onClick={handleLogoutButton} className="btn btn-info text-white hover:bg-transparent hover:text-black duration-500">LogOut</button> :
+                    {userInfo ? <button onClick={handleSignOutButton} className="btn btn-info text-white hover:bg-transparent hover:text-black duration-500">LogOut</button> :
                     <div className="space-x-3">
                         <button onClick={handleGoogleSignInPopup} className="btn btn-info text-white hover:bg-transparent hover:text-black duration-500">Google<FcGoogle /></button>
-                        <button className="btn btn-info text-white hover:bg-transparent hover:text-black duration-500">GitHub<FaGithub /></button>
+                        <button onClick={handleGitHubSignInPopup} className="btn btn-info text-white hover:bg-transparent hover:text-black duration-500">GitHub<FaGithub /></button>
                         <button className="btn btn-info text-white hover:bg-transparent hover:text-black duration-500">Twitter<FaTwitterSquare /></button>
                     </div>}
                 </div>
