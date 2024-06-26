@@ -1,4 +1,4 @@
-import { GithubAuthProvider, GoogleAuthProvider, getAuth, createUserWithEmailAndPassword, signInWithPopup, signOut } from "firebase/auth";
+import { GithubAuthProvider, GoogleAuthProvider, getAuth, createUserWithEmailAndPassword, signInWithPopup, signOut, sendEmailVerification, updateProfile } from "firebase/auth";
 import { Link } from "react-router-dom";
 import app from "../../firebase/firebase.init";
 import { FcGoogle } from "react-icons/fc";
@@ -23,14 +23,14 @@ const Register = () => {
     // Form Submission Integration
     const handleFormSubmit = e => {
         e.preventDefault();
-        // const name = e.target.name.value
+        const name = e.target.name.value
         const email = e.target.email.value;
         const password = e.target.password.value;
         const accepted = e.target.terms.checked;
 
 
 
-        // Reset Message;
+    // Reset Message;
         setCreateUserInfo('')
         setErrorCreateUserInfo('')
 
@@ -52,6 +52,21 @@ const Register = () => {
             .then(result => {
                 setCreateUserInfo('Account Created Successfully')
                 console.log(result.user)
+
+    // Update User Details
+                updateProfile(result.user, {
+                    displayName: name,
+                    photoURL: "https://example.com/jane-q-user/profile.jpg"
+                })
+                .then()
+                .catch(() => {
+
+                })
+    // Send Verification Mail
+                sendEmailVerification(result.user)
+                .then(() => {
+                    alert('Please verify your email')
+                })
             })
             .catch(error => {
                 setErrorCreateUserInfo(error.message)
@@ -99,12 +114,12 @@ const Register = () => {
         <div className="max-w-[1280px] mx-auto">
             <h2 className="text-center text-4xl capitalize font-bold">Please Register</h2>
             <form onSubmit={handleFormSubmit} className="card-body w-1/2 mx-auto">
-                {/* <div className="form-control">
+                <div className="form-control">
                     <label className="label">
                         <span className="label-text">Name</span>
                     </label>
-                    <input type="text" placeholder="Name" className="input input-bordered" required />
-                </div> */}
+                    <input type="text" name="name" placeholder="Name" className="input input-bordered" required />
+                </div>
                 <div className="form-control">
                     <label className="label">
                         <span className="label-text">Email</span>
