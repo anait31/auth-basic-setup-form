@@ -26,6 +26,7 @@ const Register = () => {
         // const name = e.target.name.value
         const email = e.target.email.value;
         const password = e.target.password.value;
+        const accepted = e.target.terms.checked;
 
 
 
@@ -41,6 +42,11 @@ const Register = () => {
             setErrorCreateUserInfo(alert('Password should be include  atleast one uppercase'));
             return
         }
+        else if (!accepted) {
+            setErrorCreateUserInfo('Please accept terms and condition');
+            return
+        }
+        
 
         createUserWithEmailAndPassword(auth, email, password)
             .then(result => {
@@ -88,9 +94,6 @@ const Register = () => {
             })
     }
 
-    const handlePasswordType = () => {
-
-    }
 
     return (
         <div className="max-w-[1280px] mx-auto">
@@ -124,7 +127,7 @@ const Register = () => {
                     </label> */}
                 </div>
                 <div>
-                    <input type="checkbox" name="" id="terms" />
+                    <input type="checkbox" name="terms" id="terms" />
                     <label className="ml-3" htmlFor="terms">Accept our <a className="underline text-blue-500" href="#">Terms and Conditions</a></label>
                 </div>
                 <div className="form-control mt-6">
